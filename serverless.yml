@@ -1,0 +1,10 @@
+component: nextjs
+name: zxti-app
+inputs:
+  runtime: Nodejs16.13
+  region: ap-guangzhou
+  entry: ./
+  staticPublishPath: .next/static
+  serverlessize: 512
+  timeout: 30
+  memorySize: 2048
