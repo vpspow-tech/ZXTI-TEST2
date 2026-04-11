@@ -443,22 +443,22 @@ export default function ZXTIPage() {
 
             {/* Dimensions */}
             <div style={{ border: '1px solid #dbe8dd', borderRadius: 18, padding: 18, background: 'linear-gradient(180deg, #ffffff, #fbfdfb)' }}>
-              <h3 style={{ fontSize: 16, marginBottom: 16 }}>十五维度评分</h3>
+              <h3 style={{ fontSize: 16, marginBottom: 16 }}>人格五维图</h3>
 
               {/* Radar Chart */}
               <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
-                <svg width="300" height="260" viewBox="0 0 300 260">
+                <svg width="320" height="280" viewBox="0 0 320 280">
                   {[60, 90, 120].map(r => (
-                    <circle key={r} cx="150" cy="130" r={r} fill="none" stroke="#dbe8dd" strokeWidth="1" />
+                    <circle key={r} cx="160" cy="140" r={r} fill="none" stroke="#dbe8dd" strokeWidth="1" />
                   ))}
                   {['内卷指数','摸鱼指数','社交恐惧','向上管理','甩锅指数'].map((_, i) => {
                     const angle = (i * 72 - 90) * Math.PI / 180;
                     return (
                       <line
                         key={i}
-                        x1="150" y1="130"
-                        x2={150 + 120 * Math.cos(angle)}
-                        y2={130 + 120 * Math.sin(angle)}
+                        x1="160" y1="140"
+                        x2={160 + 120 * Math.cos(angle)}
+                        y2={140 + 120 * Math.sin(angle)}
                         stroke="#dbe8dd" strokeWidth="1"
                       />
                     );
@@ -475,17 +475,25 @@ export default function ZXTIPage() {
                     const points = groups.map((g, i) => {
                       const avg = g.dims.reduce((s, d) => s + (scoreMap[result.levels[d]] || 2), 0) / g.dims.length;
                       const angle = (i * 72 - 90) * Math.PI / 180;
-                      return `${150 + avg * 40 * Math.cos(angle)},${130 + avg * 40 * Math.sin(angle)}`;
+                      return `${160 + avg * 40 * Math.cos(angle)},${140 + avg * 40 * Math.sin(angle)}`;
                     }).join(' ');
                     return <polygon points={points} fill="rgba(77,106,83,0.25)" stroke="#4d6a53" strokeWidth="2" />;
                   })()}
-                  {['内卷指数','摸鱼指数','社交恐惧','向上管理','甩锅指数'].map((label, i) => {
+                  {/* Labels with smart positioning to avoid clipping */}
+                  {[
+                    { label: '内卷指数', i: 0, anchor: 'middle' as const },
+                    { label: '摸鱼指数', i: 1, anchor: 'start' as const },
+                    { label: '社交恐惧', i: 2, anchor: 'start' as const },
+                    { label: '向上管理', i: 3, anchor: 'end' as const },
+                    { label: '甩锅指数', i: 4, anchor: 'end' as const },
+                  ].map(({ label, i, anchor }) => {
                     const angle = (i * 72 - 90) * Math.PI / 180;
-                    const x = 150 + 145 * Math.cos(angle);
-                    const y = 130 + 145 * Math.sin(angle);
+                    const r = 148;
+                    const x = 160 + r * Math.cos(angle);
+                    const y = 140 + r * Math.sin(angle);
                     return (
-                      <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
-                        fontSize="11" fill="#4d6a53" fontWeight="700">
+                      <text key={i} x={x} y={y} textAnchor={anchor} dominantBaseline="middle"
+                        fontSize="12" fill="#4d6a53" fontWeight="700">
                         {label}
                       </text>
                     );
