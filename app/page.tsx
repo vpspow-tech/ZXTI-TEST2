@@ -443,18 +443,81 @@ export default function ZXTIPage() {
 
             {/* Dimensions */}
             <div style={{ border: '1px solid #dbe8dd', borderRadius: 18, padding: 18, background: 'linear-gradient(180deg, #ffffff, #fbfdfb)' }}>
-              <h3 style={{ fontSize: 16, marginBottom: 12 }}>十五维度评分</h3>
-              <div style={{ display: 'grid', gap: 12 }}>
-                {dimensionOrder.map(dim => {
-                  const level = result.levels[dim];
-                  const explanation = DIM_EXPLANATIONS[dim]?.[level] || '';
+              <h3 style={{ fontSize: 16, marginBottom: 16 }}>十五维度评分</h3>
+
+              {/* Radar Chart */}
+              <div style={{ display: 'flex', justifyContent: 'center', marginBottom: 24 }}>
+                <svg width="300" height="260" viewBox="0 0 300 260">
+                  {/* Background circles */}
+                  {[60, 90, 120].map(r => (
+                    <circle key={r} cx="150" cy="130" r={r} fill="none" stroke="#dbe8dd" strokeWidth="1" />
+                  ))}
+                  {/* Axis lines */}
+                  {['S','E','A','Ac','So'].map((_, i) => {
+                    const angle = (i * 72 - 90) * Math.PI / 180;
+                    return (
+                      <line
+                        key={i}
+                        x1="150" y1="130"
+                        x2={150 + 120 * Math.cos(angle)}
+                        y2={130 + 120 * Math.sin(angle)}
+                        stroke="#dbe8dd" strokeWidth="1"
+                      />
+                    );
+                  })}
+                  {/* Data polygon */}
+                  {(() => {
+                    const groups = [
+                      { dims: ['S1','S2','S3'], label: '自我认知' },
+                      { dims: ['E1','E2','E3'], label: '情感模式' },
+                      { dims: ['A1','A2','A3'], label: '协作风格' },
+                      { dims: ['Ac1','Ac2','Ac3'], label: '行动模式' },
+                      { dims: ['So1','So2','So3'], label: '社交属性' },
+                    ];
+                    const scoreMap: Record<string, number> = { L: 1, M: 2, H: 3 };
+                    const points = groups.map((g, i) => {
+                      const avg = g.dims.reduce((s, d) => s + (scoreMap[result.levels[d]] || 2), 0) / 3;
+                      const angle = (i * 72 - 90) * Math.PI / 180;
+                      return `${150 + avg * 40 * Math.cos(angle)},${130 + avg * 40 * Math.sin(angle)}`;
+                    }).join(' ');
+                    return <polygon points={points} fill="rgba(77,106,83,0.25)" stroke="#4d6a53" strokeWidth="2" />;
+                  })()}
+                  {/* Labels */}
+                  {['自我认知','情感模式','协作风格','行动模式','社交属性'].map((label, i) => {
+                    const angle = (i * 72 - 90) * Math.PI / 180;
+                    const x = 150 + 145 * Math.cos(angle);
+                    const y = 130 + 145 * Math.sin(angle);
+                    return (
+                      <text key={i} x={x} y={y} textAnchor="middle" dominantBaseline="middle"
+                        fontSize="11" fill="#4d6a53" fontWeight="700">
+                        {label}
+                      </text>
+                    );
+                  })}
+                </svg>
+              </div>
+
+              {/* Grouped bars */}
+              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
+                {[
+                  { group: '自我认知', dims: ['S1','S2','S3'], icon: '🧠' },
+                  { group: '情感模式', dims: ['E1','E2','E3'], icon: '💭' },
+                  { group: '协作风格', dims: ['A1','A2','A3'], icon: '🤝' },
+                  { group: '行动模式', dims: ['Ac1','Ac2','Ac3'], icon: '⚡' },
+                  { group: '社交属性', dims: ['So1','So2','So3'], icon: '🌐' },
+                ].map(({ group, dims, icon }) => {
+                  const scoreMap: Record<string, number> = { L: 1, M: 2, H: 3 };
+                  const avg = dims.reduce((s, d) => s + (scoreMap[result.levels[d]] || 2), 0) / dims.length;
+                  const pct = Math.round(avg / 3 * 100);
                   return (
-                    <div key={dim} style={{ border: '1px solid #dbe8dd', borderRadius: 16, padding: 14, background: '#fff' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', gap: 10, marginBottom: 8 }}>
-                        <span style={{ fontWeight: 700, fontSize: 14 }}>{dimensionMeta[dim].name}</span>
-                        <span style={{ color: '#4d6a53', fontWeight: 800, fontSize: 14 }}>{level} / {result.rawScores[dim]}分</span>
+                    <div key={group} style={{ border: '1px solid #dbe8dd', borderRadius: 14, padding: 12, background: '#fff' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 8 }}>
+                        <span style={{ fontWeight: 700, fontSize: 13 }}>{icon} {group}</span>
+                        <span style={{ color: '#4d6a53', fontWeight: 800, fontSize: 13 }}>{pct}%</span>
                       </div>
-                      <p style={{ margin: 0, color: '#6a786f', fontSize: 13, lineHeight: 1.8 }}>{explanation}</p>
+                      <div style={{ height: 8, background: '#edf3ee', borderRadius: 999, overflow: 'hidden' }}>
+                        <div style={{ width: `${pct}%`, height: '100%', background: 'linear-gradient(90deg, #97b59c, #5b7a62)', borderRadius: 'inherit', transition: 'width .3s ease' }} />
+                      </div>
                     </div>
                   );
                 })}
