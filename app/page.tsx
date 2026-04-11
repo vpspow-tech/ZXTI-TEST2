@@ -481,12 +481,16 @@ export default function ZXTIPage() {
                       return <polygon points={points} fill="rgba(77,106,83,0.25)" stroke="#4d6a53" strokeWidth="2" />;
                     })()}
                   </svg>
-                  {/* Fixed position labels - properly aligned to each vertex */}
-                  <div style={{ position: 'absolute', top: 2, left: '50%', transform: 'translateX(-50%)', fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>内卷指数</div>
-                  <div style={{ position: 'absolute', top: 85, right: 8, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>摸鱼指数</div>
-                  <div style={{ position: 'absolute', bottom: 6, right: 14, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>向上管理</div>
-                  <div style={{ position: 'absolute', bottom: 6, left: 14, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>社交恐惧</div>
-                  <div style={{ position: 'absolute', top: 85, left: 8, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>甩锅指数</div>
+                  {/* Fixed position labels - exactly at pentagon vertices */}
+                  {/* Pentagon vertices in 320x280 viewBox with center(160,140) and r=120:
+                      i=0(内卷): top=(160,20), i=1(摸鱼): topRight=(275,103)
+                      i=2(向上): bottomRight=(231,237), i=3(社交): bottomLeft=(89,237)
+                      i=4(甩锅): topLeft=(45,103) */}
+                  <div style={{ position: 'absolute', top: 14, left: '50%', transform: 'translateX(-50%)', fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>内卷指数</div>
+                  <div style={{ position: 'absolute', top: 91, right: 6, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>摸鱼指数</div>
+                  <div style={{ position: 'absolute', bottom: 10, right: 8, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>向上管理</div>
+                  <div style={{ position: 'absolute', bottom: 10, left: 8, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>社交恐惧</div>
+                  <div style={{ position: 'absolute', top: 91, left: 6, fontSize: 12, color: '#4d6a53', fontWeight: 700, whiteSpace: 'nowrap' }}>甩锅指数</div>
                 </div>
               </div>
 
