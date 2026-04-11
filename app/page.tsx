@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import {
   questions,
   specialQuestions,
@@ -81,6 +81,12 @@ export default function ZXTIPage() {
   const [shuffledQuestions, setShuffledQuestions] = useState<typeof questions>([]);
   const [answers, setAnswers] = useState<Record<string, number>>({});
   const [result, setResult] = useState<ReturnType<typeof computeResult> | null>(null);
+
+  useEffect(() => {
+    if (screen === 'result') {
+      window.scrollTo({ top: 0, behavior: 'instant' as ScrollBehavior });
+    }
+  }, [screen]);
 
   function startTest() {
     const shuffled = shuffle(questions);
@@ -416,8 +422,8 @@ export default function ZXTIPage() {
               <h3 style={{ fontSize: 16, marginBottom: 12 }}>友情提示</h3>
               <p style={{ margin: 0, color: '#6a786f', fontSize: 13, lineHeight: 1.8 }}>
                 {result.special
-                  ? '本测试仅供娱乐。隐藏人格和傻乐兜底都属于FONE故意埋的损招，请勿把它当成装修指南、家居美学教科书、或者让你和工长吵架的理论依据。'
-                  : '本测试仅供娱乐，别拿它当装修手册、建材采购指南、或者和家属吵架的呈堂证供。你可以笑，但别太当真。'}
+                  ? '本测试仅供娱乐，请勿把它当成职场生存手册、摸鱼指南、或者和老板吵架的理论依据。'
+                  : '本测试仅供娱乐，请勿把它当成职场晋升攻略、划水手册、或者和HR吵架的呈堂证供。你可以笑，但别太当真。'}
               </p>
             </div>
 
